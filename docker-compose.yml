@@ -1,0 +1,49 @@
+services:
+  wordpress:
+    container_name: SITE_NAME
+    image: 'hgdboost/wp-coolify:latest'
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - redis
+    volumes:
+      - '/home/sites/SITE_NAME/wordpress:/usr/src/wordpress'
+      - '/home/sites/SITE_NAME/db:/var/db'
+      - 'sock:/tmp/sock:ro'
+    environment:
+      TZ: America/Detroit
+      DB_HOST: 'localhost:/tmp/sock/mysqld.sock'
+      REDIS_HOST: /tmp/sock/redis.sock
+      ADDITIONAL_PLUGINS: 'w3-total-cache fluent-smtp better-wp-security simple-cloudflare-turnstile'
+      MDBU: '${SERVICE_USER_MARIADB}'
+      MDBP: '${SERVICE_PASSWORD_MARIADB}'
+      CRON: '8 2 * * * sleep $(tr -dc 0-9 < /dev/urandom | head -c3) && wp db export --path=/usr/src/wordpress /var/db/wp.sql'
+    labels:
+      - caddy_0.tls=internal
+      - 'caddy_0.reverse_proxy={{upstreams 80}}'
+  mariadb:
+    container_name: SITE_NAME-mariadb
+    image: 'yobasystems/alpine-mariadb:11'
+    # image: jbergstroem/mariadb-alpine
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wp
+      MYSQL_USER: '${SERVICE_USER_MARIADB}'
+      MYSQL_PASSWORD: '${SERVICE_PASSWORD_MARIADB}'
+      MYSQL_ROOT_PASSWORD: '${SERVICE_PASSWORD_MARIADB}'
+    volumes:
+      - 'sock:/var/run/mysqld'
+      - 'db:/var/lib/mysql'
+      - '/etc/boost/mariadb/my.cnf:/etc/my.cnf'
+      - '/etc/boost/mariadb/run.sh:/scripts/run.sh'
+  redis:
+    container_name: SITE_NAME-redis
+    image: 'redis:7-alpine'
+    restart: unless-stopped
+    command: sh -c "rm -f /tmp/redis.sock && redis-server /usr/local/etc/redis/redis.conf"
+    volumes:
+      - '/etc/boost/redis.conf:/usr/local/etc/redis/redis.conf'
+      - 'sock:/tmp'
+volumes:
+  db: null
+  sock: null
