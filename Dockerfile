@@ -33,7 +33,7 @@ RUN apk --no-cache add \
   php82-soap \
   php82-pdo \
   php82-sqlite3 \
-  mysql-client \
+  mariadb-client \
   nginx \
   supervisor \
   curl \
