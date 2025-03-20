@@ -1,7 +1,7 @@
 services:
   wordpress:
     container_name: SITE_NAME
-    image: 'hgdboost/wp-coolify:latest'
+    image: 'ghcr.io/boost-creative/coolify-wordpress-8'
     restart: unless-stopped
     depends_on:
       - mariadb
