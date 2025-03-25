@@ -2,7 +2,7 @@ Lightweight WordPress container with Nginx & PHP-FPM 8.2 based on Alpine Linux.
 
 Uses MariaDB 11 and Valkey 8, both connected via unix sockets. Cache is set up automatically with W3 Total Cache if using the default `docker-compose.yml` file.
 
-This is meant to be easy to deploy with Coolify (using Caddy proxy) and uses Coolify's automatically generated env vars to configure credentials. However it can be easily modified to run without Coolify.
+This is meant to be easy to deploy with Coolify (using Caddy proxy) and uses Coolify's automatically generated env vars to configure credentials. However it can be modified to run without Coolify.
 
 - May use existing wordpress files (installs fresh copy if no files found)
 - Healthcheck runs wp-cron (disabled automatically in wp-config.php)
