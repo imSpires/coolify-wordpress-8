@@ -3,8 +3,8 @@ services:
     container_name: SITE_NAME
     image: 'ghcr.io/boost-creative/coolify-wordpress-8'
     restart: unless-stopped
-    mem_limit: ${WP_MEM_LIMIT:-768m}
-    cpus: ${WP_CPU_LIMIT:-2}
+    # mem_limit: ${WP_MEM_LIMIT:-768m}
+    # cpus: ${WP_CPU_LIMIT:-4}
     depends_on:
       - mariadb
       - valkey
@@ -18,7 +18,7 @@ services:
       MDBU: ${SERVICE_USER_MARIADB}
       MDBP: ${SERVICE_PASSWORD_MARIADB}
       REDIS_HOST: /tmp/sock/valkey.sock
-      ADDITIONAL_PLUGINS: 'w3-total-cache fluent-smtp crowdsec better-wp-security simple-cloudflare-turnstile'
+      ADDITIONAL_PLUGINS: 'w3-total-cache fluent-smtp better-wp-security simple-cloudflare-turnstile'
       CRON: |
         8 2 * * * sleep $(tr -dc 0-9 < /dev/urandom | head -c2) && wp db export --path=/usr/src/wordpress /var/db/wp.sql
     labels:
