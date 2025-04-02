@@ -81,7 +81,7 @@ if [[ ! -f "/usr/src/wordpress/.wp-config-configured" ]]; then
       wp --path=/usr/src/wordpress config set DB_PASSWORD "$MDBP" --skip-themes --skip-plugins
     fi
 
-    sleep 2
+    sleep 1
 
     # Try to import SQL if database is empty
     import_sql_if_needed
@@ -93,6 +93,9 @@ if [[ ! -f "/usr/src/wordpress/.wp-config-configured" ]]; then
 
     # Shuffle salts
     wp --path=/usr/src/wordpress config shuffle-salts --skip-themes --skip-plugins
+
+    # Remove w3 master.php
+    rm -f /usr/src/wordpress/wp-content/w3tc-config/master.php
 
     # add file to prevent this from running again only if commands were successful
     touch /usr/src/wordpress/.wp-config-configured

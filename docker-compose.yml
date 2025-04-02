@@ -1,5 +1,5 @@
 services:
-  wordpress:
+  SITE_NAME:
     labels:
       # Change site URL here
       - caddy_0=SITE_NAME.com www.SITE_NAME.com
@@ -10,14 +10,14 @@ services:
       - caddy_0.reverse_proxy={{upstreams 80}}
       - caddy_0.reverse_proxy.0_header_up=X-Real-IP {client_ip}
       - caddy_0.reverse_proxy.1_header_up=X-Forwarded-For {client_ip}
-    container_name: SITE_NAME
+    # container_name: SITE_NAME # doesn't work in coolify
     image: 'ghcr.io/boost-creative/coolify-wordpress-8'
     restart: unless-stopped
     mem_limit: ${WP_MEM_LIMIT:-512m}
     cpus: ${WP_CPU_LIMIT:-2}
     depends_on:
-      - mariadb
-      - valkey
+      - SITE_NAME-db
+      - SITE_NAME-vk
     volumes:
       - '/home/boost/sites/SITE_NAME/wordpress:/usr/src/wordpress'
       - '/home/boost/sites/SITE_NAME/db:/var/db'
@@ -32,10 +32,9 @@ services:
       ADDITIONAL_PLUGINS: 'w3-total-cache fluent-smtp better-wp-security simple-cloudflare-turnstile'
       CRON: |
         8 2 * * * sleep $(tr -dc 0-9 < /dev/urandom | head -c2) && wp db export --path=/usr/src/wordpress /var/db/wp.sql
-  mariadb:
+  SITE_NAME-db:
     container_name: SITE_NAME-mariadb
     image: 'yobasystems/alpine-mariadb:11'
-    # image: jbergstroem/mariadb-alpine
     restart: unless-stopped
     mem_limit: ${WP_MEM_LIMIT:-512m}
     # cpus: ${WP_CPU_LIMIT:-4}
@@ -49,8 +48,8 @@ services:
       - 'db:/var/lib/mysql'
       - '/etc/coolify-setup/mariadb/my.cnf:/etc/my.cnf'
       - '/etc/coolify-setup/mariadb/db-entrypoint.sh:/scripts/run.sh'
-  valkey:
-    container_name: SITE_NAME-valkey
+  SITE_NAME-vk:
+    # container_name: SITE_NAME-valkey
     image: 'valkey/valkey:8-alpine'
     restart: unless-stopped
     command: sh -c "mkdir -p /tmp/sock && rm -f /tmp/sock/valkey.sock && valkey-server /usr/local/etc/valkey/valkey.conf"
