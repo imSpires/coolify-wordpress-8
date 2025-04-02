@@ -81,11 +81,6 @@ if [[ ! -f "/usr/src/wordpress/.wp-config-configured" ]]; then
       wp --path=/usr/src/wordpress config set DB_PASSWORD "$MDBP" --skip-themes --skip-plugins
     fi
 
-    sleep 1
-
-    # Try to import SQL if database is empty
-    import_sql_if_needed
-
     # Set each WordPress configuration option individually
     echo "Setting WordPress configuration options..."
     wp --path=/usr/src/wordpress config set DISABLE_WP_CRON true --raw --skip-themes --skip-plugins
@@ -96,6 +91,11 @@ if [[ ! -f "/usr/src/wordpress/.wp-config-configured" ]]; then
 
     # Remove w3 master.php
     rm -f /usr/src/wordpress/wp-content/w3tc-config/master.php
+
+    sleep 1
+
+    # Try to import SQL if database is empty
+    import_sql_if_needed
 
     # add file to prevent this from running again only if commands were successful
     touch /usr/src/wordpress/.wp-config-configured
