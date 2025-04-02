@@ -81,6 +81,8 @@ if [[ ! -f "/usr/src/wordpress/.wp-config-configured" ]]; then
       wp --path=/usr/src/wordpress config set DB_PASSWORD "$MDBP" --skip-themes --skip-plugins
     fi
 
+    sleep 2
+
     # Try to import SQL if database is empty
     import_sql_if_needed
 
