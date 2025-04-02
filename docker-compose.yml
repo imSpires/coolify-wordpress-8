@@ -3,8 +3,8 @@ services:
     container_name: SITE_NAME
     image: 'ghcr.io/boost-creative/coolify-wordpress-8'
     restart: unless-stopped
-    # mem_limit: ${WP_MEM_LIMIT:-768m}
-    # cpus: ${WP_CPU_LIMIT:-4}
+    mem_limit: ${WP_MEM_LIMIT:-512m}
+    cpus: ${WP_CPU_LIMIT:-2}
     depends_on:
       - mariadb
       - valkey
@@ -25,14 +25,19 @@ services:
       - caddy_0.0_import=crowdsec
       - caddy_0.1_import=wordpress_rate_limit
       - caddy_0.2_tls=internal
-      - 'caddy_0.3_reverse_proxy={{upstreams 80}}'
+      - caddy_0.handle_path=/*
+      - caddy_0.handle_path.0_reverse_proxy={{upstreams 80}}
+      - caddy_0.handle_path.0_reverse_proxy.0_header_up=X-Real-IP {client_ip}
+      - caddy_0.handle_path.0_reverse_proxy.1_header_up=X-Forwarded-For {client_ip}
   mariadb:
     container_name: SITE_NAME-mariadb
     image: 'yobasystems/alpine-mariadb:11'
     # image: jbergstroem/mariadb-alpine
     restart: unless-stopped
+    mem_limit: ${WP_MEM_LIMIT:-512m}
+    # cpus: ${WP_CPU_LIMIT:-4}
     environment:
-      MYSQL_DATABASE: ${SERVICE_DATABASE_MARIADB}
+      MYSQL_DATABASE: wp
       MYSQL_USER: ${SERVICE_USER_MARIADB}
       MYSQL_PASSWORD: ${SERVICE_PASSWORD_MARIADB}
       MYSQL_ROOT_PASSWORD: ${SERVICE_PASSWORD_MARIADB}
