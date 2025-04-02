@@ -91,6 +91,9 @@ if [[ ! -f "/usr/src/wordpress/.wp-config-configured" ]]; then
     wp --path=/usr/src/wordpress config set DISABLE_WP_CRON true --raw --skip-themes --skip-plugins
     wp --path=/usr/src/wordpress config set WP_POST_REVISIONS 5 --raw --skip-themes --skip-plugins
 
+    # Shuffle salts
+    wp --path=/usr/src/wordpress config shuffle-salts --skip-themes --skip-plugins
+
     # add file to prevent this from running again only if commands were successful
     touch /usr/src/wordpress/.wp-config-configured
     echo "WordPress configuration completed successfully."
