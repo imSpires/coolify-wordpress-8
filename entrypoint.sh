@@ -86,13 +86,11 @@ if [[ ! -f "/usr/src/wordpress/.wp-config-configured" ]]; then
     wp --path=/usr/src/wordpress config set DISABLE_WP_CRON true --raw --skip-themes --skip-plugins
     wp --path=/usr/src/wordpress config set WP_POST_REVISIONS 5 --raw --skip-themes --skip-plugins
 
-    # Shuffle salts
-    wp --path=/usr/src/wordpress config shuffle-salts --skip-themes --skip-plugins
+    # Shuffle salts (can't do this bc it will nuke stuff in fluent smtp and other plugins :()
+    # wp --path=/usr/src/wordpress config shuffle-salts --skip-themes --skip-plugins
 
     # Remove w3 master.php
     rm -f /usr/src/wordpress/wp-content/w3tc-config/master.php
-
-    sleep 1
 
     # Try to import SQL if database is empty
     import_sql_if_needed
