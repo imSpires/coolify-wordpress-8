@@ -15,9 +15,10 @@ services:
     restart: unless-stopped
     mem_limit: ${WP_MEM_LIMIT:-512m}
     cpus: ${WP_CPU_LIMIT:-2}
+    networks: [coolify]
     depends_on:
       - SITE_NAME-db
-      - SITE_NAME-vk
+      - SITE_NAME-valkey
     volumes:
       - '/home/boost/sites/SITE_NAME/wordpress:/usr/src/wordpress'
       - '/home/boost/sites/SITE_NAME/db:/var/db'
@@ -48,7 +49,7 @@ services:
       - 'db:/var/lib/mysql'
       - '/etc/coolify-setup/mariadb/my.cnf:/etc/my.cnf'
       - '/etc/coolify-setup/mariadb/db-entrypoint.sh:/scripts/run.sh'
-  SITE_NAME-vk:
+  SITE_NAME-valkey:
     # container_name: SITE_NAME-valkey
     image: 'valkey/valkey:8-alpine'
     restart: unless-stopped
@@ -59,3 +60,6 @@ services:
 volumes:
   db: null
   sock: null
+networks:
+  coolify:
+    external: true

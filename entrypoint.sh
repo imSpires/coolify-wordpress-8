@@ -12,6 +12,8 @@ import_sql_if_needed() {
   if [ ${#SQL_FILES[@]} -gt 0 ] && [ -f "${SQL_FILES[0]}" ]; then
     SQL_FILE="${SQL_FILES[0]}"
     echo "Found SQL file: $SQL_FILE. Testing database connection..."
+    wp cli cache clear --path=/usr/src/wordpress --skip-themes --skip-plugins
+    wp cache flush --path=/usr/src/wordpress --skip-themes --skip-plugins
     sleep 5 # wait to make sure database is ready
     if wp db check --path=/usr/src/wordpress --skip-themes --skip-plugins &>/dev/null; then
       # Check if database is empty (no tables)
@@ -56,7 +58,8 @@ fi
 
 # exit if no wp-config.php
 if [[ ! -f "$CONFIG" ]]; then
-  echo "*** Config file not found. Please restart after installing Wordpress. ***"
+  # echo "*** Config file not found. Please restart after installing Wordpress. ***"
+  wp config create --dbhost="$DB_HOST" --dbname="$DB_NAME" --dbuser="$MDBU" --dbpass="$MDBP" --locale=en_US --skip-themes --skip-plugins
   exec "$@"
 fi
 
