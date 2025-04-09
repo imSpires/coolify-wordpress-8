@@ -116,6 +116,7 @@ if [ ! "$(ls -A "/usr/src/wordpress/wp-content/plugins/vips-image-editor" 2>/dev
 fi
 
 # Check additional plugins from environment variable
+sleep 3
 for PLUGIN in $ADDITIONAL_PLUGINS; do
   if [ ! "$(ls -A "/usr/src/wordpress/wp-content/plugins/$PLUGIN" 2>/dev/null)" ]; then
     echo "Adding plugin: $PLUGIN"
@@ -131,7 +132,6 @@ fi
 
 # auto setup w3 total cache
 if [ "$REDIS_HOST" ] && [[ ! -f "/usr/src/wordpress/.w3tc-configured" ]]; then
-  sleep 3
   if wp --path=/usr/src/wordpress plugin --skip-themes is-active litespeed-cache; then
     wp --path=/usr/src/wordpress plugin --skip-themes --uninstall deactivate litespeed-cache
   fi
