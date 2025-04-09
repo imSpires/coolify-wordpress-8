@@ -51,8 +51,8 @@ else
       rm latest.tar.gz &&
       chown -R nobody: /usr/src/wordpress
   fi
-  echo "*** Please restart container after Wordpress setup ***"
-  exec "$@"
+  # echo "*** Please restart container after Wordpress setup ***"
+  # exec "$@"
 fi
 
 # exit if no wp-config.php
@@ -116,7 +116,6 @@ if [ ! "$(ls -A "/usr/src/wordpress/wp-content/plugins/vips-image-editor" 2>/dev
 fi
 
 # Check additional plugins from environment variable
-sleep 3
 for PLUGIN in $ADDITIONAL_PLUGINS; do
   if [ ! "$(ls -A "/usr/src/wordpress/wp-content/plugins/$PLUGIN" 2>/dev/null)" ]; then
     echo "Adding plugin: $PLUGIN"
@@ -124,6 +123,7 @@ for PLUGIN in $ADDITIONAL_PLUGINS; do
   fi
 done
 
+sleep 3
 # Install all plugins in a single command if there are any to install
 if [ ${#PLUGINS_TO_INSTALL[@]} -gt 0 ]; then
   echo "Installing plugins: ${PLUGINS_TO_INSTALL[*]}"
