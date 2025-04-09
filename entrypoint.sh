@@ -58,7 +58,7 @@ fi
 # exit if no wp-config.php
 if [[ ! -f "$CONFIG" ]]; then
   echo "*** Please restart after installing Wordpress. ***"
-  sleep 2
+  sleep 8
   wp config create --dbhost="$DB_HOST" --dbname="$DB_NAME" --dbuser="$MDBU" --dbpass="$MDBP" --locale=en_US --skip-themes --skip-plugins
   exec "$@"
 fi
