@@ -11,7 +11,7 @@ services:
       - caddy_0.reverse_proxy.0_header_up=X-Real-IP {client_ip}
       - caddy_0.reverse_proxy.1_header_up=X-Forwarded-For {client_ip}
     # container_name: SITE_NAME # doesn't work in coolify
-    image: 'ghcr.io/boost-creative/coolify-wordpress-8'
+    image: 'ghcr.io/imSpires/coolify-wordpress-8'
     restart: unless-stopped
     mem_limit: ${WP_MEM_LIMIT:-512m}
     cpus: ${WP_CPU_LIMIT:-2}
@@ -20,8 +20,8 @@ services:
       - SITE_NAME-db
       - SITE_NAME-valkey
     volumes:
-      - '/home/boost/sites/SITE_NAME/wordpress:/usr/src/wordpress'
-      - '/home/boost/sites/SITE_NAME/db:/var/db'
+      - '/home/1up/sites/SITE_NAME/wordpress:/usr/src/wordpress'
+      - '/home/1up/sites/SITE_NAME/db:/var/db'
       - 'sock:/tmp/sock:ro'
     environment:
       TZ: America/Detroit
