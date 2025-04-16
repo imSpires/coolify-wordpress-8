@@ -20,8 +20,8 @@ services:
       - SITE_NAME-db
       - SITE_NAME-valkey
     volumes:
-      - '/home/1up/sites/SITE_NAME/wordpress:/usr/src/wordpress'
-      - '/home/1up/sites/SITE_NAME/db:/var/db'
+      - '/home/spires/sites/SITE_NAME/wordpress:/usr/src/wordpress'
+      - '/home/spires/sites/SITE_NAME/db:/var/db'
       - 'sock:/tmp/sock:ro'
     environment:
       TZ: America/Detroit
