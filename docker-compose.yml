@@ -11,7 +11,7 @@ services:
       - caddy_0.reverse_proxy.0_header_up=X-Real-IP {client_ip}
       - caddy_0.reverse_proxy.1_header_up=X-Forwarded-For {client_ip}
     # container_name: SITE_NAME # doesn't work in coolify
-    image: 'ghcr.io/imSpires/coolify-wordpress-8'
+    image: 'ghcr.io/imspires/coolify-wordpress-8'
     restart: unless-stopped
     mem_limit: ${WP_MEM_LIMIT:-512m}
     cpus: ${WP_CPU_LIMIT:-2}
